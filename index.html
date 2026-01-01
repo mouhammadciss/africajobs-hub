@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfricaJobs Hub - Veille des Opportunités en Afrique</title>
+    <meta name="description" content="Plateforme de veille intelligente des offres d'emploi en marketing, communication et digital en Afrique">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // Données des offres
+        const jobs = [
+            {
+                id: 1,
+                title: "Chef de Projet Marketing Digital",
+                company: "Orange Sénégal",
+                country: "Sénégal",
+                city: "Dakar",
+                type: "Marketing Digital",
+                date: "2025-01-01",
+                salary: "À négocier",
+                tags: ["SEO", "SEM", "Analytics"]
+            },
+            {
+                id: 2,
+                title: "Responsable Communication",
+                company: "Groupe Ecobank",
+                country: "Côte d'Ivoire",
+                city: "Abidjan",
+                type: "Communication",
+                date: "2024-12-30",
+                salary: "800 000 - 1 200 000 FCFA",
+                tags: ["Relations publiques", "Médias", "Corporate"]
+            },
+            {
+                id: 3,
+                title: "Social Media Manager",
+                company: "Jumia Kenya",
+                country: "Kenya",
+                city: "Nairobi",
+                type: "Marketing Digital",
+                date: "2024-12-29",
+                salary: "KES 120,000 - 180,000",
+                tags: ["Social Media", "Content", "Community"]
+            },
+            {
+                id: 4,
+                title: "Développeur Web Front-End",
+                company: "Tech Hub Lagos",
+                country: "Nigeria",
+                city: "Lagos",
+                type: "Digital/Tech",
+                date: "2024-12-28",
+                salary: "₦350,000 - ₦550,000",
+                tags: ["React", "JavaScript", "UI/UX"]
+            },
+            {
+                id: 5,
+                title: "Directeur Marketing",
+                company: "Bank of Africa",
+                country: "Maroc",
+                city: "Casablanca",
+                type: "Marketing",
+                date: "2024-12-27",
+                salary: "25 000 - 35 000 MAD",
+                tags: ["Stratégie", "Management", "B2B"]
+            },
+            {
+                id: 6,
+                title: "Chargé de Communication Digitale",
+                company: "ONG Internationale",
+                country: "Burkina Faso",
+                city: "Ouagadougou",
+                type: "Communication",
+                date: "2024-12-26",
+                salary: "450 000 - 650 000 FCFA",
+                tags: ["Digital", "ONG", "Multimédia"]
+            },
+            {
+                id: 7,
+                title: "Content Manager",
+                company: "MTN Group",
+                country: "Afrique du Sud",
+                city: "Johannesburg",
+                type: "Marketing Digital",
+                date: "2024-12-25",
+                salary: "ZAR 35,000 - 50,000",
+                tags: ["Content Strategy", "Copywriting", "SEO"]
+            },
+            {
+                id: 8,
+                title: "Analyste Marketing",
+                company: "Safaricom",
+                country: "Kenya",
+                city: "Nairobi",
+                type: "Marketing",
+                date: "2024-12-24",
+                salary: "KES 150,000 - 200,000",
+                tags: ["Data Analytics", "Market Research", "CRM"]
+            }
+        ];
+
+        const countries = ["Sénégal", "Côte d'Ivoire", "Kenya", "Nigeria", "Maroc", "Burkina Faso", "Ghana", "Cameroun", "Afrique du Sud"];
+        const jobTypes = ["Marketing Digital", "Communication", "Digital/Tech", "Marketing"];
+
+        // État de l'application
+        let state = {
+            selectedCountry: 'all',
+            selectedType: 'all',
+            searchQuery: '',
+            showFilters: false
+        };
+
+        // Filtrer les offres
+        function filterJobs() {
+            return jobs.filter(job => {
+                const matchesCountry = state.selectedCountry === 'all' || job.country === state.selectedCountry;
+                const matchesType = state.selectedType === 'all' || job.type === state.selectedType;
+                const matchesSearch = state.searchQuery === '' || 
+                    job.title.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                    job.company.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+                    job.tags.some(tag => tag.toLowerCase().includes(state.searchQuery.toLowerCase()));
+                
+                return matchesCountry && matchesType && matchesSearch;
+            });
+        }
+
+        // Formater la date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // Rendu de l'application
+        function render() {
+            const filteredJobs = filterJobs();
+            
+            const html = `
+                <div class="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-green-50">
+                    <!-- Header -->
+                    <header class="bg-white shadow-md">
+                        <div class="max-w-7xl mx-auto px-4 py-6">
+                            <div class="flex items-center justify-between flex-wrap gap-4">
+                                <div>
+                                    <h1 class="text-3xl font-bold text-orange-600">AfricaJobs Hub</h1>
+                                    <p class="text-gray-600 text-sm mt-1">Veille intelligente des opportunités en Afrique</p>
+                                </div>
+                                <div class="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                    Alimenté par IA
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Stats -->
+                    <div class="max-w-7xl mx-auto px-4 py-8">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-orange-100 rounded-lg">
+                                        <i data-lucide="briefcase" class="w-5 h-5 text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-800">1,247</div>
+                                        <div class="text-xs text-gray-600">Offres actives</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-orange-100 rounded-lg">
+                                        <i data-lucide="map-pin" class="w-5 h-5 text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-800">54</div>
+                                        <div class="text-xs text-gray-600">Pays couverts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-orange-100 rounded-lg">
+                                        <i data-lucide="trending-up" class="w-5 h-5 text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-800">89</div>
+                                        <div class="text-xs text-gray-600">Nouvelles aujourd'hui</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-orange-100 rounded-lg">
+                                        <i data-lucide="globe" class="w-5 h-5 text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-800">320+</div>
+                                        <div class="text-xs text-gray-600">Sources</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search and Filters -->
+                        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex-1 relative">
+                                    <i data-lucide="search" class="absolute left-3 top-3 w-5 h-5 text-gray-400"></i>
+                                    <input
+                                        type="text"
+                                        placeholder="Rechercher un poste, entreprise, compétence..."
+                                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                        value="${state.searchQuery}"
+                                        oninput="updateSearch(this.value)"
+                                    />
+                                </div>
+                                <button
+                                    onclick="toggleFilters()"
+                                    class="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                                >
+                                    <i data-lucide="filter" class="w-5 h-5"></i>
+                                    Filtres
+                                </button>
+                            </div>
+
+                            ${state.showFilters ? `
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Pays</label>
+                                        <select
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                            onchange="updateCountry(this.value)"
+                                        >
+                                            <option value="all" ${state.selectedCountry === 'all' ? 'selected' : ''}>Tous les pays</option>
+                                            ${countries.map(country => `
+                                                <option value="${country}" ${state.selectedCountry === country ? 'selected' : ''}>${country}</option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Type d'offre</label>
+                                        <select
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                                            onchange="updateType(this.value)"
+                                        >
+                                            <option value="all" ${state.selectedType === 'all' ? 'selected' : ''}>Tous les types</option>
+                                            ${jobTypes.map(type => `
+                                                <option value="${type}" ${state.selectedType === type ? 'selected' : ''}>${type}</option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Results -->
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-xl font-semibold text-gray-800">
+                                ${filteredJobs.length} offre${filteredJobs.length > 1 ? 's' : ''} trouvée${filteredJobs.length > 1 ? 's' : ''}
+                            </h2>
+                        </div>
+
+                        <!-- Job Cards -->
+                        <div class="space-y-4">
+                            ${filteredJobs.map(job => `
+                                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow">
+                                    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                                        <div class="flex-1">
+                                            <h3 class="text-xl font-semibold text-gray-800 mb-2">${job.title}</h3>
+                                            <div class="text-orange-600 font-medium mb-3">${job.company}</div>
+                                            
+                                            <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
+                                                <div class="flex items-center gap-1">
+                                                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                                    ${job.city}, ${job.country}
+                                                </div>
+                                                <div class="flex items-center gap-1">
+                                                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                                                    ${formatDate(job.date)}
+                                                </div>
+                                                <div class="flex items-center gap-1">
+                                                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                                                    ${job.type}
+                                                </div>
+                                            </div>
+
+                                            <div class="flex flex-wrap gap-2 mb-3">
+                                                ${job.tags.map(tag => `
+                                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                                                        ${tag}
+                                                    </span>
+                                                `).join('')}
+                                            </div>
+
+                                            <div class="text-sm font-medium text-green-600">${job.salary}</div>
+                                        </div>
+
+                                        <button class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors whitespace-nowrap">
+                                            Voir l'offre
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Footer Info -->
+                    <div class="max-w-7xl mx-auto px-4 py-8">
+                        <div class="bg-gradient-to-r from-orange-600 to-green-600 rounded-lg shadow-lg p-8 text-white">
+                            <h3 class="text-2xl font-bold mb-4">Comment ça fonctionne ?</h3>
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div>
+                                    <div class="text-3xl font-bold mb-2">1</div>
+                                    <h4 class="font-semibold mb-2">Collecte intelligente</h4>
+                                    <p class="text-sm text-orange-100">L'IA parcourt quotidiennement 320+ sources web à travers l'Afrique</p>
+                                </div>
+                                <div>
+                                    <div class="text-3xl font-bold mb-2">2</div>
+                                    <h4 class="font-semibold mb-2">Analyse & Catégorisation</h4>
+                                    <p class="text-sm text-orange-100">Classification automatique par pays, type, compétences requises</p>
+                                </div>
+                                <div>
+                                    <div class="text-3xl font-bold mb-2">3</div>
+                                    <h4 class="font-semibold mb-2">Mise à jour en temps réel</h4>
+                                    <p class="text-sm text-orange-100">Nouvelles offres ajoutées toutes les heures, 24/7</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('app').innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // Fonctions d'interaction
+        function updateSearch(value) {
+            state.searchQuery = value;
+            render();
+        }
+
+        function updateCountry(value) {
+            state.selectedCountry = value;
+            render();
+        }
+
+        function updateType(value) {
+            state.selectedType = value;
+            render();
+        }
+
+        function toggleFilters() {
+            state.showFilters = !state.showFilters;
+            render();
+        }
+
+        // Rendu initial
+        render();
+    </script>
+</body>
+</html>
